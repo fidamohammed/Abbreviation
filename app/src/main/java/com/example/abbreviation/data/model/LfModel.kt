@@ -1,0 +1,15 @@
+package com.example.abbreviation.data.model
+
+
+import com.google.gson.annotations.SerializedName
+
+data class LfModel(
+    @SerializedName("freq")
+    val freq: Int,
+    @SerializedName("lf")
+    val lf: String,
+    @SerializedName("since")
+    val since: Int,
+    @SerializedName("vars")
+    val vars: List<VarModel>
+)

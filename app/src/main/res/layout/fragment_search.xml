@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.search.SearchFragment"
+    android:padding="30dp"
+    android:orientation="vertical">
+
+ <RadioGroup
+     android:id="@+id/radioGroup"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal">
+     <RadioButton
+         android:id="@+id/sfRadioButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Search Definition"/>
+     <RadioButton
+         android:id="@+id/lfRadioButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Search Abbreviation"/>
+ </RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp">
+        <EditText
+            android:id="@+id/searchTerm"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            tools:text="Sample text"
+            />
+        <Button
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+    <TextView
+        android:id="@+id/tvSearchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:gravity="center"/>
+
+</LinearLayout>
