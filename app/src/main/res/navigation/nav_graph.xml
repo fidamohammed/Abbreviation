@@ -15,9 +15,5 @@
         android:name="com.example.abbreviation.ui.history.HistoryFragment"
         android:label="Search Histroy"
         tools:layout="@layout/fragment_history" />
-    <fragment
-        android:id="@+id/searchHistoryFragment"
-        android:name="com.example.abbreviation.ui.history.SearchHistoryFragment"
-        android:label="fragment_search_history"
-        tools:layout="@layout/fragment_search_history" />
+
 </navigation>

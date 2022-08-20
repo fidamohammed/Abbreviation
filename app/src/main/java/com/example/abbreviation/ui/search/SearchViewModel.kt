@@ -45,11 +45,6 @@ class SearchViewModel @Inject constructor(val repository: Repository, applicatio
         }
 
     }
-//    fun isInDatabase(searchTerm: String): Boolean{
-//        val dbData = repository.readFromDb(searchTerm)
-//
-//        return false
-//    }
 
     fun saveApiDataIntoDb(longFormItemModel: LongFormItemModel){
         val longFormEntity = LongFormEntity(0,longFormItemModel.lfs,longFormItemModel.sf)

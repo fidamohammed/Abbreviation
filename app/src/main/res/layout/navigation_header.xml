@@ -5,15 +5,14 @@
     android:layout_height="match_parent"
     android:padding="50dp">
 
-    <ImageView
-        android:layout_width="@dimen/header_image_size"
-        android:layout_height="@dimen/header_image_size"
-        android:layout_gravity="center"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textSize="20dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"/>
 
