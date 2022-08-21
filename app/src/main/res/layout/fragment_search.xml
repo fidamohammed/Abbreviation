@@ -3,49 +3,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.search.SearchFragment"
     android:padding="20dp"
     android:orientation="vertical">
 
- <RadioGroup
-     android:id="@+id/radioGroup"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:orientation="horizontal"
-     android:checkedButton="@id/sfRadioButton">
-     <RadioButton
-         android:id="@+id/sfRadioButton"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="Search Definition"/>
-     <RadioButton
-         android:id="@+id/lfRadioButton"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="Search Abbreviation"/>
- </RadioGroup>
-    <LinearLayout
+
+        <SearchView
+            android:id="@+id/svSearchFragment"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:queryHint="Search Abbreviations"
+            android:background="@drawable/search_view"
+            />
+
+
+
+
+  <!--  <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
+        android:layout_height="wrap_content">
         <EditText
             android:id="@+id/searchTerm"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             tools:text="Sample text"
+            android:singleLine="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+
             />
         <Button
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline2"
             android:text="Search"/>
-    </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="121dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/app_theme_primary_variant"
+        android:layout_marginTop="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearchFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"/>
 
 
 

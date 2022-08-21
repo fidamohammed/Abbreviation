@@ -14,6 +14,15 @@
         android:id="@+id/histroyFragment"
         android:name="com.example.abbreviation.ui.history.HistoryFragment"
         android:label="Search Histroy"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_histroyFragment_to_cardItemDetailFragment"
+            app:destination="@id/cardItemDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cardItemDetailFragment"
+        android:name="com.example.abbreviation.ui.Detail.CardItemDetailFragment"
+        android:label="Definitions"
+        tools:layout="@layout/fragment_card_item_detail" />
 
 </navigation>

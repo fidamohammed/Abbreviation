@@ -14,4 +14,5 @@ interface Repository{
     fun readFromDb(searchTerm: String): Flow<List<LongFormEntity>>
 
     fun readAllFromDb(): Flow<List<LongFormEntity>>
+
 }

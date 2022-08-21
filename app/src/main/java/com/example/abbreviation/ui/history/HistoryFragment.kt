@@ -8,11 +8,10 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.abbreviation.R
 import com.example.abbreviation.data.room.LongFormEntity
 import com.example.abbreviation.databinding.FragmentHistoryBinding
-import com.example.abbreviation.ui.search.SearchViewModel
-import com.example.abbreviation.util.observeOnce
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import com.lorentzos.flingswipe.SwipeFlingAdapterView.onFlingListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,14 +22,15 @@ class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var arrayAdapter: ArrayAdapter<String>
     lateinit var data: MutableList<String>
-    lateinit var flingAdapterView: SwipeFlingAdapterView
+    private lateinit var flingAdapterView: SwipeFlingAdapterView
+    private lateinit var detailData: List<LongFormEntity>
+    lateinit var dataItem: LongFormEntity
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentHistoryBinding.inflate(layoutInflater)
 
         flingAdapterView = binding.swipe1
@@ -43,8 +43,9 @@ class HistoryFragment : Fragment() {
         searchHistoryViewModel.getWordsFromDb()
         searchHistoryViewModel.readLongForm.observe(viewLifecycleOwner){database->
             if(database.isEmpty()){
-                data = mutableListOf("java","python","php","html","kotlin")
+                data = mutableListOf("")
             }else{
+                detailData=database
                 insertToArray(database)
             }
         }
@@ -61,11 +62,11 @@ class HistoryFragment : Fragment() {
             }
 
             override fun onLeftCardExit(o: Any) {
-                Toast.makeText(requireContext(), "Left swipe", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Left swipe", Toast.LENGTH_SHORT).show()
             }
 
             override fun onRightCardExit(o: Any) {
-                Toast.makeText(requireContext(), "Right Swipe", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Right Swipe", Toast.LENGTH_SHORT).show()
             }
 
             override fun onAdapterAboutToEmpty(i: Int) {}
@@ -73,13 +74,30 @@ class HistoryFragment : Fragment() {
 
         })
 
-       // flingAdapterView.setOnItemClickListener(SwipeFlingAdapterView.OnItemClickListener())
-
+        flingAdapterView.setOnItemClickListener(SwipeFlingAdapterView.OnItemClickListener { itemPosition, dataObject ->
+            //Toast.makeText(context,"Item clicked", Toast.LENGTH_LONG).show()
+            //var word = dataObject
+            //getDataObject(dataObject,detailData)
+            var bundle = Bundle()
+            bundle.putSerializable("word",getDataObject(dataObject,detailData))
+            //bundle.putString("word", dataObject.toString())
+            findNavController().navigate(R.id.action_histroyFragment_to_cardItemDetailFragment, bundle)
+        })
 
         return binding.root
 
 
     }
+
+    private fun getDataObject(dataObject: Any?, detailData: List<LongFormEntity>): LongFormEntity {
+        for(element in detailData){
+            if(element.sf == dataObject.toString()){
+                dataItem=element
+            }
+        }
+        return dataItem
+    }
+
 
     private fun insertToArray(longFormEntity: List<LongFormEntity>) {
         for(element in longFormEntity){

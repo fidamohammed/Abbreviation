@@ -9,13 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchHistoryViewModel @Inject constructor(val repository: Repository): ViewModel() {
 
-    //var readLongForm: LiveData<List<LongFormEntity>> = repository.readAllFromDb().asLiveData()
-
-    lateinit var history: ArrayList<String>
-
     lateinit var readLongForm: LiveData<List<LongFormEntity>>
-
-    //var readLongForm: LiveData<List<LongFormEntity>> = repository.readFromDb().asLiveData()
 
     fun getWordsFromDb(){
         readLongForm= repository.readAllFromDb().asLiveData()

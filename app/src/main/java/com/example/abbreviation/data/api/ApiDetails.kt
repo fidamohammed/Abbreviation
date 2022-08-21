@@ -9,7 +9,4 @@ interface ApiDetails {
 @GET("dictionary.py")
 suspend fun getMeaning(@Query("sf") sf: String): ArrayList<LongFormItemModel>
 
-@GET("dictionary.py")
-suspend fun getShortForm(@Query("lf") lf: String): ArrayList<LongFormItemModel>
-
 }

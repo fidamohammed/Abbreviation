@@ -4,6 +4,7 @@ import androidx.room.*
 import com.example.abbreviation.data.model.LfModel
 import com.example.abbreviation.data.model.LongFormItemModel
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 //@Entity(tableName = "LongForm")
@@ -21,4 +22,4 @@ data class LongFormEntity(
     @TypeConverters(LongFormTypeConverter::class)
     val lfs: List<LfModel>,
     val sf: String
-)
+) : Serializable

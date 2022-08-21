@@ -18,4 +18,5 @@ interface LongFormDao {
     @Query("Select * from longform")
     fun readAllFromDb(): Flow<List<LongFormEntity>>
 
+
 }

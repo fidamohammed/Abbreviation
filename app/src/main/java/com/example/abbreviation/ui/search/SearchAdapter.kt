@@ -22,23 +22,14 @@ class SearchAdapter(val sf: String, val lfs:List<LfModel>): RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        //var lfs = meaningList[position].lfs
         holder.binding.apply {
             tvLongForm.text = lfs[position].lf
             tvFrequency.text = lfs[position].freq.toString()
             tvSince.text = lfs[position].since.toString()
         }
-        //holder.binding.tvLongForm.text = lfs[position].lf
-        //holder.binding.tvFrequency.text = lfs[position].freq.toString()
-        //holder.binding.
     }
 
     override fun getItemCount(): Int {
         return lfs.size
-
     }
-
-
-
-
 }

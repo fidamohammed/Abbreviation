@@ -21,6 +21,4 @@ class RepositoryImpl @Inject constructor(val apiDetails: ApiDetails, val longFor
     override fun readAllFromDb(): Flow<List<LongFormEntity>> =
         longFormDao.readAllFromDb()
 
-
-
 }

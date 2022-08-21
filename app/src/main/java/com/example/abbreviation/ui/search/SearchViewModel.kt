@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(val repository: Repository, application: Application): AndroidViewModel(application) {
+class SearchViewModel @Inject constructor(val repository: Repository): ViewModel() {
 
     private val _meaningLiveData : MutableLiveData<UiState> = MutableLiveData(UiState.Loading)
     val meaningLiveData: LiveData<UiState> get() = _meaningLiveData
@@ -40,7 +40,6 @@ class SearchViewModel @Inject constructor(val repository: Repository, applicatio
                 for(longform in response){
                     saveApiDataIntoDb(longform)
                 }
-                //add to db
             }
         }
 
@@ -48,25 +47,24 @@ class SearchViewModel @Inject constructor(val repository: Repository, applicatio
 
     fun saveApiDataIntoDb(longFormItemModel: LongFormItemModel){
         val longFormEntity = LongFormEntity(0,longFormItemModel.lfs,longFormItemModel.sf)
-        //val longFormEntity = LongFormEntity(longFormItemModel)
         CoroutineScope(Dispatchers.IO).launch {
             repository.insertIntoDb(longFormEntity)
         }
     }
 
 
-    fun hasInternetConnection(): Boolean {
-        val connectivityManager = getApplication<Application>().getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val activeNetWork = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(activeNetWork) ?: return false
-
-        return when {
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
-    }
+//    fun hasInternetConnection(): Boolean {
+//        val connectivityManager = getApplication<Application>().getSystemService(
+//            Context.CONNECTIVITY_SERVICE
+//        ) as ConnectivityManager
+//        val activeNetWork = connectivityManager.activeNetwork ?: return false
+//        val capabilities = connectivityManager.getNetworkCapabilities(activeNetWork) ?: return false
+//
+//        return when {
+//            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+//            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+//            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+//            else -> false
+//        }
+//    }
 }
