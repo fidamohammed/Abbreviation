@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.abbreviation.R
 import com.example.abbreviation.data.room.LongFormEntity
 import com.example.abbreviation.databinding.FragmentHistoryBinding
+import com.example.abbreviation.util.observeOnce
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import com.lorentzos.flingswipe.SwipeFlingAdapterView.onFlingListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,7 @@ class HistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var arrayAdapter: ArrayAdapter<String>
-    lateinit var data: MutableList<String>
+    lateinit var data: MutableList<String?>
     private lateinit var flingAdapterView: SwipeFlingAdapterView
     private lateinit var detailData: List<LongFormEntity>
     lateinit var dataItem: LongFormEntity
@@ -43,6 +44,7 @@ class HistoryFragment : Fragment() {
         searchHistoryViewModel.getWordsFromDb()
         searchHistoryViewModel.readLongForm.observe(viewLifecycleOwner){database->
             if(database.isEmpty()){
+                Toast.makeText(context,"No Search History", Toast.LENGTH_SHORT).show()
                 data = mutableListOf("")
             }else{
                 detailData=database
@@ -78,9 +80,11 @@ class HistoryFragment : Fragment() {
             //Toast.makeText(context,"Item clicked", Toast.LENGTH_LONG).show()
             //var word = dataObject
             //getDataObject(dataObject,detailData)
+            dataItem = LongFormEntity(0, listOf(),"")
             var bundle = Bundle()
             bundle.putSerializable("word",getDataObject(dataObject,detailData))
             //bundle.putString("word", dataObject.toString())
+
             findNavController().navigate(R.id.action_histroyFragment_to_cardItemDetailFragment, bundle)
         })
 
@@ -89,10 +93,11 @@ class HistoryFragment : Fragment() {
 
     }
 
-    private fun getDataObject(dataObject: Any?, detailData: List<LongFormEntity>): LongFormEntity {
+    fun getDataObject(dataObject: Any?, detailData: List<LongFormEntity>): LongFormEntity {
         for(element in detailData){
             if(element.sf == dataObject.toString()){
                 dataItem=element
+                break
             }
         }
         return dataItem

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.abbreviation.R
 import com.example.abbreviation.data.model.LongFormItemModel
 import com.example.abbreviation.databinding.FragmentSearchBinding
 import com.example.abbreviation.util.UiState
@@ -19,16 +20,15 @@ import com.example.abbreviation.util.observeOnce
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private lateinit var binding: FragmentSearchBinding
     private lateinit var recyclerView: RecyclerView
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSearchBinding.inflate(inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding = FragmentSearchBinding.bind(view)
 
         val searchViewModel by lazy{
             ViewModelProvider(this).get(SearchViewModel::class.java)
@@ -88,6 +88,14 @@ class SearchFragment : Fragment() {
             }
         })
 
+    }
+
+  /*  override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+
        // val searchButton = binding.searchButton
 
     /*    searchButton.setOnClickListener{
@@ -131,13 +139,14 @@ class SearchFragment : Fragment() {
             }
         }  */
         return binding.root
-    }
+    }*/
 
     private fun updateUi(longFormItemModel: LongFormItemModel) {
         val sf = longFormItemModel.sf
         val lfs = longFormItemModel.lfs
         recyclerView.adapter = SearchAdapter(sf,lfs)
     }
+
 
 
 }
