@@ -46,7 +46,7 @@ class SearchViewModel @Inject constructor(val repository: Repository): ViewModel
     }
 
     fun saveApiDataIntoDb(longFormItemModel: LongFormItemModel){
-        val longFormEntity = LongFormEntity(0,longFormItemModel.lfs,longFormItemModel.sf)
+        val longFormEntity = LongFormEntity(longFormItemModel.sf,longFormItemModel.lfs)
         CoroutineScope(Dispatchers.IO).launch {
             repository.insertIntoDb(longFormEntity)
         }

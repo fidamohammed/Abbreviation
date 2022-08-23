@@ -10,8 +10,8 @@ class HistoryFragmentTest{
 
     @Test
     fun `get data object`(){
-        val dataObject = LongFormEntity(0, listOf(),"test")
-        val detailData = listOf<LongFormEntity>(LongFormEntity(0, listOf(),"test"),LongFormEntity(1, listOf(),"sample"))
+        val dataObject = LongFormEntity("test", listOf())
+        val detailData = listOf<LongFormEntity>(LongFormEntity("test", listOf()),LongFormEntity("sample", listOf()))
         val result = historyFragment.getDataObject(dataObject.sf,detailData)
         assertEquals(result,dataObject)
     }

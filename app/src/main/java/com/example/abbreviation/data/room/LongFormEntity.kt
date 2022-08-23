@@ -17,9 +17,9 @@ import java.io.Serializable
 
 @Entity(tableName = "LongForm")
 data class LongFormEntity(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    @PrimaryKey
+    val sf: String,
     @TypeConverters(LongFormTypeConverter::class)
-    val lfs: List<LfModel>,
-    val sf: String
+    val lfs: List<LfModel>
+
 ) : Serializable

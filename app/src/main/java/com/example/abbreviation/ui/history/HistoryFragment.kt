@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,7 +23,7 @@ class HistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentHistoryBinding
     private lateinit var arrayAdapter: ArrayAdapter<String>
-    lateinit var data: MutableList<String?>
+    lateinit var data: MutableList<String>
     private lateinit var flingAdapterView: SwipeFlingAdapterView
     private lateinit var detailData: List<LongFormEntity>
     lateinit var dataItem: LongFormEntity
@@ -39,7 +40,7 @@ class HistoryFragment : Fragment() {
         val searchHistoryViewModel =
             ViewModelProvider(this)[SearchHistoryViewModel::class.java]
 
-        data = mutableListOf("")
+        data = mutableListOf()
 
         searchHistoryViewModel.getWordsFromDb()
         searchHistoryViewModel.readLongForm.observe(viewLifecycleOwner){database->
@@ -48,11 +49,12 @@ class HistoryFragment : Fragment() {
                 data = mutableListOf("")
             }else{
                 detailData=database
+
                 insertToArray(database)
+                arrayAdapter.notifyDataSetChanged()
             }
         }
-
-
+        //arrayAdapter = HistoryAdapter(data)
         arrayAdapter = ArrayAdapter(requireContext(), R.layout.card_items, R.id.data, data)
         flingAdapterView.adapter = arrayAdapter
 
@@ -80,7 +82,7 @@ class HistoryFragment : Fragment() {
             //Toast.makeText(context,"Item clicked", Toast.LENGTH_LONG).show()
             //var word = dataObject
             //getDataObject(dataObject,detailData)
-            dataItem = LongFormEntity(0, listOf(),"")
+            dataItem = LongFormEntity("", listOf())
             var bundle = Bundle()
             bundle.putSerializable("word",getDataObject(dataObject,detailData))
             //bundle.putString("word", dataObject.toString())
@@ -93,7 +95,8 @@ class HistoryFragment : Fragment() {
 
     }
 
-    fun getDataObject(dataObject: Any?, detailData: List<LongFormEntity>): LongFormEntity {
+
+     fun getDataObject(dataObject: Any?, detailData: List<LongFormEntity>): LongFormEntity {
         for(element in detailData){
             if(element.sf == dataObject.toString()){
                 dataItem=element

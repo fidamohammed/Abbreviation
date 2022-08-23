@@ -20,7 +20,7 @@ import com.example.abbreviation.util.observeOnce
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : Fragment(R.layout.fragment_search){
 
     private lateinit var binding: FragmentSearchBinding
     private lateinit var recyclerView: RecyclerView
@@ -39,18 +39,24 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         val searchView = binding.svSearchFragment
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+        searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(query: String): Boolean {
+                searchView.clearFocus()
                 val searchTerm = searchView.query.toString()
                 if(searchTerm.isNullOrBlank()){
                     Toast.makeText(context,"Enter search term",Toast.LENGTH_LONG).show()
                     recyclerView.adapter = SearchAdapter("", listOf())
                 }else{
                     searchViewModel.getMeaningsFromDb(searchTerm)
+                    searchViewModel.readLongForm.removeObservers(viewLifecycleOwner)
                     searchViewModel.readLongForm.observeOnce(viewLifecycleOwner){ database ->
                         if(database.isEmpty()){
                             if(checkForInternet(requireContext())){
                                 searchViewModel.getMeaningsfromApi(searchTerm)
+                                searchViewModel.meaningLiveData.removeObservers(viewLifecycleOwner)
                                 searchViewModel.meaningLiveData.observe(viewLifecycleOwner) { state ->
                                     when (state) {
                                         is UiState.Loading -> {
@@ -73,8 +79,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                             }else{
                                 Toast.makeText(context, "No Internet connection and no database content", Toast.LENGTH_LONG).show()
                                 recyclerView.adapter = SearchAdapter("", listOf())
+
                             }
-                        }else{updateUi(LongFormItemModel(database[0].lfs,database[0].sf))
+                        }else{
+                            updateUi(LongFormItemModel(database[0].lfs,database[0].sf))
                             Log.d("SearchResult", "Data from Db -> ${database[0]}")
                         }
                     }
@@ -145,6 +153,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val sf = longFormItemModel.sf
         val lfs = longFormItemModel.lfs
         recyclerView.adapter = SearchAdapter(sf,lfs)
+        recyclerView.clearFocus()
     }
 
 

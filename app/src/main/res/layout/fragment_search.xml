@@ -15,6 +15,7 @@
             android:layout_height="50dp"
             android:queryHint="Search Abbreviations"
             android:background="@drawable/search_view"
+            android:iconifiedByDefault="false"
             />
 
 
