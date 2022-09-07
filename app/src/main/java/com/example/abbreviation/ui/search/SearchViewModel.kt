@@ -12,14 +12,17 @@ import com.example.abbreviation.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(val repository: Repository): ViewModel() {
 
-    private val _meaningLiveData : MutableLiveData<UiState> = MutableLiveData(UiState.Loading)
-    val meaningLiveData: LiveData<UiState> get() = _meaningLiveData
+    private val _meaningLiveData : MutableStateFlow<UiState> = MutableStateFlow(UiState.Loading)
+    val meaningLiveData: StateFlow<UiState> get() = _meaningLiveData
 
 
     lateinit var readLongForm: LiveData<List<LongFormEntity>>
@@ -27,20 +30,28 @@ class SearchViewModel @Inject constructor(val repository: Repository): ViewModel
     //var readLongForm: LiveData<List<LongFormEntity>> = repository.readFromDb().asLiveData()
 
     fun getMeaningsFromDb(searchTerm: String){
-
         readLongForm= repository.readFromDb(searchTerm).asLiveData()
     }
+//    fun resetFlow(){
+//        _meaningLiveData.value = UiState.Loading
+//    }
+
     fun getMeaningsfromApi(sf: String){
         CoroutineScope(Dispatchers.IO).launch {
-            val response = repository.getMeaningFromApi(sf)
-            if(response.isEmpty()){
-                _meaningLiveData.postValue(UiState.Error(Throwable(response.toString())))
-            }else{
-                _meaningLiveData.postValue(UiState.Success(response))
-                for(longform in response){
-                    saveApiDataIntoDb(longform)
+            try{
+                val response = repository.getMeaningFromApi(sf)
+                if(response.isEmpty()){
+                    _meaningLiveData.value = UiState.Error("")
+                }else{
+                    _meaningLiveData.value = UiState.Success(response)
+                    for(longform in response){
+                        saveApiDataIntoDb(longform)
+                    }
                 }
+            }catch (e: Exception){
+                _meaningLiveData.value = UiState.Error("Error ${e.message}")
             }
+
         }
 
     }

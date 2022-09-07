@@ -9,6 +9,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.abbreviation.R
@@ -18,6 +19,11 @@ import com.example.abbreviation.util.UiState
 import com.example.abbreviation.util.checkForInternet
 import com.example.abbreviation.util.observeOnce
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment(R.layout.fragment_search){
@@ -45,6 +51,7 @@ class SearchFragment : Fragment(R.layout.fragment_search){
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchView.clearFocus()
+                //searchViewModel.resetFlow()
                 val searchTerm = searchView.query.toString()
                 if(searchTerm.isNullOrBlank()){
                     Toast.makeText(context,"Enter search term",Toast.LENGTH_LONG).show()
@@ -56,26 +63,32 @@ class SearchFragment : Fragment(R.layout.fragment_search){
                         if(database.isEmpty()){
                             if(checkForInternet(requireContext())){
                                 searchViewModel.getMeaningsfromApi(searchTerm)
-                                searchViewModel.meaningLiveData.removeObservers(viewLifecycleOwner)
-                                searchViewModel.meaningLiveData.observe(viewLifecycleOwner) { state ->
-                                    when (state) {
-                                        is UiState.Loading -> {
-                                            Log.d("SearchResult", "Loading")
-                                        }
-                                        is UiState.Error -> {
-                                            Log.d("SearchResult", "Error -> ${state.error.message}")
-                                            Toast.makeText(context,"Invalid search term",Toast.LENGTH_LONG).show()
-                                            updateUi(LongFormItemModel(listOf(),""))
-                                        }
-                                        is UiState.Success<*> -> {
-                                            var result = state.meaningResponse as ArrayList<LongFormItemModel>
-                                            Log.d("SearchResult","Data from Api -> $result")
-                                            for(res in result){
-                                                updateUi(res)
+                                searchViewModel.meaningLiveData.asLiveData().removeObservers(viewLifecycleOwner)
+                               CoroutineScope(Dispatchers.Main).launch {
+                                    searchViewModel.meaningLiveData.collect{state ->
+                                        //searchViewModel.meaningLiveData.asLiveData().observe(viewLifecycleOwner) { state ->
+                                        when (state) {
+                                            is UiState.Loading -> {
+                                                Log.d("SearchResult", "Loading")
+                                            }
+                                            is UiState.Error -> {
+                                                Log.d("SearchResult", "Error -> ${state.error}")
+                                                Toast.makeText(context,"Invalid search term",Toast.LENGTH_LONG).show()
+                                                updateUi(LongFormItemModel(listOf(),""))
+                                            }
+                                            is UiState.Success<*> -> {
+                                                var result = state.meaningResponse as ArrayList<LongFormItemModel>
+                                                Log.d("SearchResult","Data from Api -> $result")
+                                                for(res in result){
+                                                    updateUi(res)
+                                                }
                                             }
                                         }
                                     }
+                                    //}
                                 }
+
+
                             }else{
                                 Toast.makeText(context, "No Internet connection and no database content", Toast.LENGTH_LONG).show()
                                 recyclerView.adapter = SearchAdapter("", listOf())
